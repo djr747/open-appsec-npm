@@ -11,6 +11,11 @@ ARG BUILD_VERSION
 ARG BUILD_COMMIT
 ARG BUILD_DATE
 
+# Add lib for using attachment as base
+RUN apt-get update \
+    apt-get install musl-dev \
+    ln -s /usr/lib/x86_64-linux-musl/libc.so libc.musl-x86_64.so.1
+
 # See: https://github.com/just-containers/s6-overlay/blob/master/README.md
 ENV SUPPRESS_NO_CONFIG_WARNING=1 \
 	S6_BEHAVIOUR_IF_STAGE2_FAILS=1 \
