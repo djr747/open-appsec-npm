@@ -2,6 +2,8 @@
 # for multi-arch support. Building with `docker build` may have unexpected results.
 
 # This file assumes that the frontend has been built using ./scripts/frontend-build
+FROM ghcr.io/openappsec/nginx-ingress-attachment:1.1.18 as libs
+
 FROM nginxproxymanager/nginx-full:certbot-node
 
 ARG TARGETPLATFORM
@@ -48,9 +50,14 @@ RUN mkdir -p /usr/lib/nginx/modules
 
 # Temp fix module error
 #COPY docker/lib/libngx_module.so /usr/lib/nginx/modules/libngx_module.so
-COPY docker/lib/libosrc_nginx_attachment_util.so /usr/lib/libosrc_nginx_attachment_util.so
-COPY docker/lib/libosrc_compression_utils.so /usr/lib/libosrc_compression_utils.so
-COPY docker/lib/libosrc_shmem_ipc.so /usr/lib/libosrc_shmem_ipc.so
+#COPY docker/lib/libosrc_nginx_attachment_util.so /usr/lib/libosrc_nginx_attachment_util.so
+#COPY docker/lib/libosrc_compression_utils.so /usr/lib/libosrc_compression_utils.so
+#COPY docker/lib/libosrc_shmem_ipc.so /usr/lib/libosrc_shmem_ipc.so
+
+COPY --from=libs /usr/lib/nginx/modules/libngx_module.so /usr/lib/nginx/modules/libngx_module.so
+COPY --from=libs /usr/lib/libosrc_nginx_attachment_util.so /usr/lib/libosrc_nginx_attachment_util.so
+COPY --from=libs /usr/lib/libosrc_compression_utils.so /usr/lib/libosrc_compression_utils.so
+COPY --from=libs /usr/lib/libosrc_shmem_ipc.so /usr/lib/libosrc_shmem_ipc.so
 
 # add late to limit cache-busting by modifications
 COPY docker/rootfs /
