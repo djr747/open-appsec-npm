@@ -27,6 +27,8 @@ ENV SUPPRESS_NO_CONFIG_WARNING=1 \
 RUN echo "fs.file-max = 65535" > /etc/sysctl.conf \
 	&& apt-get update \
 	&& apt-get install -y --no-install-recommends jq logrotate \
+ 	&& apt-get install musl-dev -y \
+  	&& ln -s /usr/lib/x86_64-linux-musl/libc.so /lib/libc.musl-x86_64.so.1 \
 	&& apt-get clean \
 	&& rm -rf /var/lib/apt/lists/*
 
@@ -58,11 +60,6 @@ COPY --from=libs /usr/lib/nginx/modules/ngx_cp_attachment_module.so /usr/lib/ngi
 COPY --from=libs /usr/lib/libosrc_nginx_attachment_util.so /usr/lib/libosrc_nginx_attachment_util.so
 COPY --from=libs /usr/lib/libosrc_compression_utils.so /usr/lib/libosrc_compression_utils.so
 COPY --from=libs /usr/lib/libosrc_shmem_ipc.so /usr/lib/libosrc_shmem_ipc.so
-
-# Add lib for using attachment as base
-RUN apt-get update && \
-    apt-get install musl-dev -y && \
-    ln -s /usr/lib/x86_64-linux-musl/libc.so /lib/libc.musl-x86_64.so.1
 
 # add late to limit cache-busting by modifications
 COPY docker/rootfs /
