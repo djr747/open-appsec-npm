@@ -54,7 +54,7 @@ RUN mkdir -p /usr/lib/nginx/modules
 #COPY docker/lib/libosrc_compression_utils.so /usr/lib/libosrc_compression_utils.so
 #COPY docker/lib/libosrc_shmem_ipc.so /usr/lib/libosrc_shmem_ipc.so
 
-COPY --from=libs /usr/lib/nginx/modules/libngx_module.so /usr/lib/nginx/modules/libngx_module.so
+COPY --from=libs /usr/lib/nginx/modules/ngx_cp_attachment_module.so /usr/lib/nginx/modules/libngx_module.so
 COPY --from=libs /usr/lib/libosrc_nginx_attachment_util.so /usr/lib/libosrc_nginx_attachment_util.so
 COPY --from=libs /usr/lib/libosrc_compression_utils.so /usr/lib/libosrc_compression_utils.so
 COPY --from=libs /usr/lib/libosrc_shmem_ipc.so /usr/lib/libosrc_shmem_ipc.so
