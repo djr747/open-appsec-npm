@@ -2,7 +2,7 @@
 # for multi-arch support. Building with `docker build` may have unexpected results.
 
 # This file assumes that the frontend has been built using ./scripts/frontend-build
-FROM ghcr.io/openappsec/nginx-ingress-attachment:1.1.18 as libs
+FROM ghcr.io/openappsec/nginx-ingress-attachment:1.1.17 as libs
 
 FROM nginxproxymanager/nginx-full:certbot-node
 
