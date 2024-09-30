@@ -61,7 +61,7 @@ COPY --from=libs /usr/lib/libosrc_shmem_ipc.so /usr/lib/libosrc_shmem_ipc.so
 
 # Add lib for using attachment as base
 RUN apt-get update && \
-    apt-get install musl-dev && \
+    apt-get install musl-dev -y && \
     ln -s /usr/lib/x86_64-linux-musl/libc.so /lib/libc.musl-x86_64.so.1
 
 # add late to limit cache-busting by modifications
