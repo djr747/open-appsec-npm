@@ -3,6 +3,9 @@
 
 # This file assumes that the frontend has been built using ./scripts/frontend-build
 
+# Temp fix to pull libraries from attachment image
+FROM ghcr.io/openappsec/nginx-ingress-attachment:1.1.18 as libs
+
 FROM nginxproxymanager/nginx-full:certbot-node
 
 ARG TARGETPLATFORM
@@ -46,10 +49,18 @@ RUN yarn install \
 # add open-appsec attachment
 RUN mkdir -p /usr/lib/nginx
 RUN mkdir -p /usr/lib/nginx/modules
-COPY docker/lib/libngx_module.so /usr/lib/nginx/modules/libngx_module.so
-COPY docker/lib/libosrc_nginx_attachment_util.so /usr/lib/libosrc_nginx_attachment_util.so
-COPY docker/lib/libosrc_compression_utils.so /usr/lib/libosrc_compression_utils.so
-COPY docker/lib/libosrc_shmem_ipc.so /usr/lib/libosrc_shmem_ipc.so
+
+# Temp fix pull libs from attachment image
+
+#COPY docker/lib/libngx_module.so /usr/lib/nginx/modules/libngx_module.so
+#COPY docker/lib/libosrc_nginx_attachment_util.so /usr/lib/libosrc_nginx_attachment_util.so
+#COPY docker/lib/libosrc_compression_utils.so /usr/lib/libosrc_compression_utils.so
+#COPY docker/lib/libosrc_shmem_ipc.so /usr/lib/libosrc_shmem_ipc.so
+
+COPY --from libs /usr/lib/nginx/modules/libngx_module.so /usr/lib/nginx/modules/libngx_module.so
+COPY --from libs /usr/lib/libosrc_nginx_attachment_util.so /usr/lib/libosrc_nginx_attachment_util.so
+COPY --from libs /usr/lib/libosrc_compression_utils.so /usr/lib/libosrc_compression_utils.so
+COPY --from libs /usr/lib/libosrc_shmem_ipc.so /usr/lib/libosrc_shmem_ipc.so
 
 # add late to limit cache-busting by modifications
 COPY docker/rootfs /
