@@ -2,9 +2,7 @@
 # for multi-arch support. Building with `docker build` may have unexpected results.
 
 # This file assumes that the frontend has been built using ./scripts/frontend-build
-
-# Temp fix to pull libraries from attachment image
-FROM ghcr.io/openappsec/nginx-ingress-attachment:1.1.18 as libs
+FROM ghcr.io/openappsec/nginx-ingress-attachment:1.1.18 AS libs
 
 FROM nginxproxymanager/nginx-full:certbot-node
 
